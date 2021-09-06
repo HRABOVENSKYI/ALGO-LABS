@@ -131,4 +131,29 @@ public class HeapSort {
         }
         return arr;
     }
+
+    private static int[] readArrFromFile(String stringArr) {
+        List<Integer> arrayList = new ArrayList<>();
+
+        for (String number : stringArr.split(",")) {
+            arrayList.add(Integer.parseInt(number));
+        }
+
+        return arrayList.stream()
+                .mapToInt(Integer::intValue)
+                .toArray();
+    }
+
+    public static void main(String[] args) {
+
+        String order = args[0];
+        int[] arr = readArrFromFile(args[1]);
+
+        // sort arr
+        if (order.equals("asc")) {
+            System.out.println(sortAscReturnStat(arr));
+        } else {
+            System.out.println(sortDescReturnStat(arr));
+        }
+    }
 }
