@@ -1,105 +1,83 @@
 package ua.lviv.iot;
 
 import java.util.*;
-import java.util.function.*;
 
-public class CustomPriorityQueue {
+class CustomPriorityQueue {
+    private int[] heap;
+    private int heapSize, capacity;
 
-    private Object[] priorityQueueArr;
-    private int size; // general size of Queue
-    private int numOfElements; // current number of elements in Queue
-
-    public CustomPriorityQueue(int size) {
-        this.size = size;
-        priorityQueueArr = new Object[this.size];
-        numOfElements = 0;
+    public CustomPriorityQueue(int capacity) {
+        this.capacity = capacity + 1;
+        heap = new int[this.capacity];
+        heapSize = 0;
     }
 
     public CustomPriorityQueue() {
         this(10);
     }
 
+    public void clear() {
+        heap = new int[capacity];
+        capacity = 1;
+        heapSize = 0;
+    }
+
+    public int size() {
+        return heapSize;
+    }
+
     public void add(int value) {
-        if (isFull()) {
-            size *= 2;
-            priorityQueueArr = Arrays.copyOf(priorityQueueArr, size);
+        if (capacity <= heapSize + 1) {
+            capacity = (heapSize + 1) * 2;
+            heap = Arrays.copyOf(heap, capacity);
         }
 
-        if (numOfElements == 0) {
-            priorityQueueArr[numOfElements++] = value; // if there is no elements in queue, add value at starting pos
-        } else {
-            int i;
-
-            for (i = numOfElements - 1; i >= 0; i--) {
-                if (value > (int) priorityQueueArr[i]) {
-                    priorityQueueArr[i + 1] = priorityQueueArr[i]; // if value is larger, shift elements to the end till value is larger
-                } else {
-                    break;
-                }
-            }
-
-            priorityQueueArr[i + 1] = value; // add element is space created by shift
-            numOfElements++;
+        heap[heapSize++] = value;
+        int pos = heapSize - 1;
+        while (pos != 0 && value < heap[(pos - 1) / 2]) {
+            heap[pos] = heap[(pos - 1) / 2];
+            pos -= 1;
+            pos /= 2;
         }
+        heap[pos] = value;
     }
 
-    public Object poll() {
+    public int poll() {
         if (isEmpty()) {
-            return null;
+            return 0;
         }
-        Object removedElement = priorityQueueArr[--numOfElements];
-        priorityQueueArr[numOfElements] =  null;
-        return removedElement;
-    }
+        int parent, child;
+        int item, temp;
 
-    public boolean remove(Object o) {
-        int i = indexOf(o);
-        if (i == -1) {
-            return false;
-        } else {
-            removeAt(i);
-            return true;
+        item = heap[0];
+        temp = heap[--heapSize];
+
+        parent = 0;
+        child = 1;
+        while (child <= heapSize) {
+            if (child < heapSize && heap[child] > heap[child + 1])
+                child++;
+            if (temp <= heap[child])
+                break;
+
+            heap[parent] = heap[child];
+            parent = child;
+            child *= 2;
+            child += 1;
         }
-    }
-
-    private void removeAt(int i) {
-        int indexOfLastElement = --numOfElements;
-        if (indexOfLastElement == i) {
-            priorityQueueArr[i] = null;
-        } else {
-            for (int j = i; j < indexOfLastElement; j++) {
-                priorityQueueArr[j] = priorityQueueArr[j + 1];
-            }
-            priorityQueueArr[indexOfLastElement] = null;
+        heap[parent] = temp;
+        if (heapSize == 0) {
+            clear();
         }
+
+        return item;
     }
 
-    public Object peek() {
-        return priorityQueueArr[numOfElements - 1];
-    }
-
-    public void forEach(Consumer<Integer> action) {
-        Objects.requireNonNull(action);
-        for (int i = 0; i < numOfElements; i++)
-            action.accept((Integer) priorityQueueArr[i]);
-    }
-
-    public boolean isFull() {
-        return (numOfElements >= size);
+    public int peek() {
+        return heap[0];
     }
 
     public boolean isEmpty() {
-        return (numOfElements == 0);
-    }
-
-    private int indexOf(Object o) {
-        if (o != null) {
-            for (int i = 0; i < numOfElements; i++) {
-                if (o.equals(priorityQueueArr[i])) {
-                    return i;
-                }
-            }
-        }
-        return -1;
+        return heapSize == 0;
     }
 }

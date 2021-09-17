@@ -21,28 +21,21 @@ public class CustomPriorityQueueTest {
     }
 
     @Test
-    public void testIsFull() {
-        QUEUE = new CustomPriorityQueue(1);
-        Assert.assertFalse(QUEUE.isFull());
-        QUEUE.add(0);
-        Assert.assertTrue(QUEUE.isFull());
-    }
-
-    @Test
     public void testAdd() {
+        // first element
         QUEUE.add(2);
-        QUEUE.add(1);
+        Assert.assertEquals(2, QUEUE.peek());
+        Assert.assertEquals(1, QUEUE.size());
+
+        // second (with bigger priority)
+        QUEUE.add(-3);
+        Assert.assertEquals(-3, QUEUE.peek());
+        Assert.assertEquals(2, QUEUE.size());
+
+        // third (with smaller priority)
         QUEUE.add(4);
-        QUEUE.add(-1);
-        QUEUE.add(0);
-
-        StringBuilder elements = new StringBuilder();
-        QUEUE.forEach(el -> elements.append(el).append(" "));
-        String actual = elements.toString();
-
-        String expected = "4 2 1 0 -1 ";
-
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals(-3, QUEUE.peek());
+        Assert.assertEquals(3, QUEUE.size());
     }
 
     @Test
@@ -61,8 +54,9 @@ public class CustomPriorityQueueTest {
 
         Assert.assertTrue(QUEUE.isEmpty());
 
-        Assert.assertNull(QUEUE.poll());
-        Assert.assertNull(QUEUE.poll());
+        // when empty
+        Assert.assertEquals(0, QUEUE.poll());
+        Assert.assertEquals(0, QUEUE.poll());
     }
 
     @Test
@@ -72,18 +66,5 @@ public class CustomPriorityQueueTest {
 
         Assert.assertEquals(1, QUEUE.peek());
         Assert.assertEquals(1, QUEUE.peek());
-    }
-
-    @Test
-    public void testRemove() {
-        QUEUE.add(2);
-        QUEUE.add(-1);
-
-        Assert.assertTrue(QUEUE.remove(-1));
-        Assert.assertTrue(QUEUE.remove(2));
-        Assert.assertFalse(QUEUE.remove(-1));
-        Assert.assertFalse(QUEUE.remove(-2));
-
-        Assert.assertTrue(QUEUE.isEmpty());
     }
 }
