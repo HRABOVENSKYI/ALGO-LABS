@@ -34,25 +34,25 @@ public class GraphTest {
 
     @Test
     public void willPrintVerticesInCorrectOrderStartingFrom0() {
-        graph.DFS(0);
+        graph.depthFirstSearch(0);
         assertEquals("0 1 2 3 ", outContent.toString());
     }
 
     @Test
     public void willPrintVerticesInCorrectOrderStartingFrom1() {
-        graph.DFS(1);
+        graph.depthFirstSearch(1);
         assertEquals("1 2 0 3 ", outContent.toString());
     }
 
     @Test
     public void willPrintVerticesInCorrectOrderStartingFrom2() {
-        graph.DFS(2);
+        graph.depthFirstSearch(2);
         assertEquals("2 0 1 3 ", outContent.toString());
     }
 
     @Test
     public void willPrintVerticesInCorrectOrderStartingFrom3() {
-        graph.DFS(3);
+        graph.depthFirstSearch(3);
         assertEquals("3 ", outContent.toString());
     }
 }

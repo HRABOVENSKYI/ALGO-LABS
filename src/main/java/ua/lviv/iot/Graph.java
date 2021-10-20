@@ -10,53 +10,47 @@ import java.util.LinkedList;
 import java.util.Set;
 
 public class Graph {
-    private int V; // Num of vertices
+    private final int numOfVertices; // Num of vertices
 
     // Array  of lists for Adjacency List Representation
     private final LinkedList<Integer>[] adj;
 
     // Constructor
     @SuppressWarnings("unchecked")
-    Graph(int v) {
-        V = v;
-        adj = new LinkedList[v];
-        for (int i = 0; i < v; ++i)
+    Graph(int numOfVertices) {
+        this.numOfVertices = numOfVertices;
+        adj = new LinkedList[numOfVertices];
+        for (int i = 0; i < numOfVertices; ++i)
             adj[i] = new LinkedList<>();
     }
 
     // Function to add an edge into the graph
-    void addEdge(int v, int w) {
-        adj[v].add(w); // Add w to v's list.
+    void addEdge(int vertex, int vertexToAdd) {
+        adj[vertex].add(vertexToAdd);
     }
 
     // A function used by DFS
-    void DFSUtil(int v, boolean[] visited) {
+    void depthFirstSearchUtil(int vertex, boolean[] visited) {
         // Mark the current node as visited and print it
-        visited[v] = true;
-        System.out.print(v + " ");
+        visited[vertex] = true;
+        System.out.print(vertex + " ");
 
         // Recur for all the vertices adjacent to this vertex
-        Iterator<Integer> i = adj[v].listIterator();
-        while (i.hasNext()) {
-            int n = i.next();
-            if (!visited[n])
-                DFSUtil(n, visited);
+        Iterator<Integer> vertexIterator = adj[vertex].listIterator();
+        while (vertexIterator.hasNext()) {
+            int nextVertex = vertexIterator.next();
+            if (!visited[nextVertex])
+                depthFirstSearchUtil(nextVertex, visited);
         }
     }
 
     // The function to do DFS traversal. It uses recursive DFSUtil()
-    void DFS(int v) {
+    void depthFirstSearch(int vertex) {
         // Mark all the vertices as not visited(set as false by default in java)
-        boolean[] visited = new boolean[V];
+        boolean[] visited = new boolean[numOfVertices];
 
         // Call the recursive helper function to print DFS traversal
-        DFSUtil(v, visited);
-    }
-
-    // Driver Code
-    public static void main(String[] args) {
-        Graph g = createGraphFromFile("graph.in");
-        g.DFS(2);
+        depthFirstSearchUtil(vertex, visited);
     }
 
     public static Graph createGraphFromFile(String fileName) {
