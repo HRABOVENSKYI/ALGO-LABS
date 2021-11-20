@@ -7,10 +7,9 @@ def find_ways_count(matrix, w, h):
     for i in range(w):
         for j in range(h):
             letter = matrix[j][i]
-            if i+1 < w:
-                if matrix[j][i] == matrix[j][i+1]:
-                    flow_arr[j][i+1] -= 1
-
+            if i + 1 < w:
+                if matrix[j][i] == matrix[j][i + 1]:
+                    flow_arr[j][i + 1] -= 1
 
             if letter in counter_for_letter:
                 flow_arr[j][i] += counter_for_letter[letter]
